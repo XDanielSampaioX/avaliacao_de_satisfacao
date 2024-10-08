@@ -3,3 +3,8 @@
 @tailwind utilities;
 
 
+@layer components {
+  .boxed {
+    @apply w-[390px] h-[844px]
+  }
+}

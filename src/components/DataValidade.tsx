@@ -5,7 +5,7 @@ interface DataValidadeProps {
 export default function DataValidade(props : DataValidadeProps) {
     return (
         <>
-            <span>Avotação é possivel até {props.data_enquete}</span>
+            <span className="flex justify-center items-center">Avotação é possivel até {props.data_enquete}</span>
         </>
     )
 };

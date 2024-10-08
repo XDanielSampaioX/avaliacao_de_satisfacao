@@ -5,7 +5,7 @@ import { VotosContextProvider } from "@/core/contexts/VotacaoContext";
 
 export default function Home() {
   return (
-    <div>
+    <div className="boxed m-auto">
       <VotosContextProvider>
         <Cabecalho />
         <DataValidade data_enquete={"2024"} />

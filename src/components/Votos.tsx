@@ -44,7 +44,7 @@ export default function Votos(props: VotosProps) {
     };
 
     return (
-        <div className="flex items-center justify-between p-3">
+        <div className="flex items-center justify-between p-3 border-zinc-300 border-2 rounded-md">
             <div>
                 <h3 className="text-xl">{props.categoria}</h3>
                 <span className="text-sm">

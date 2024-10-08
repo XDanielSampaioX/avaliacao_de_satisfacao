@@ -44,24 +44,13 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
         totalVotos: 0,
     });
 
-    const [userIps, setUserIps] = useState<string[]>([]); // Array para armazenar IPs
+    const [userIp, setUserIp] = useState<string | null>(null);
 
-    // Função para buscar o IP do usuário e adicionar ao array
+    // Função para buscar o IP do usuário
     const fetchUserIp = async () => {
-        try {
-            const response = await fetch('/api/get_Ip');
-            const data = await response.json();
-            
-            // Adiciona o novo IP ao array de IPs existentes, se não existir
-            setUserIps((prevIps) => {
-                if (!prevIps.includes(data.ip)) {
-                    return [...prevIps, data.ip];
-                }
-                return prevIps; // Retorna o array anterior se o IP já existir
-            });
-        } catch (error) {
-            console.error("Erro ao buscar o IP do usuário:", error);
-        }
+        const response = await fetch('/api/get_Ip');
+        const data = await response.json();
+        setUserIp(data.ip);
     };
 
     // Função para buscar votos do Supabase
@@ -84,24 +73,26 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
         fetchVotos();
     }, []);
 
+    // Função para atualizar votos no Supabase
     const putVotos = async (props: TiposVotosProps) => {
-        if (userIps.length === 0) {
-            console.log("Nenhum IP registrado.");
+
+        if (!userIp) {
+            console.log("IP do usuário não encontrado.");
             return;
         }
 
         // Verifica se o IP já votou
         const { data: existingVote } = await supabase
             .from('satisfacao')
-            .select('*')
-            .eq('ip', userIps[userIps.length - 1]); // Usando o último IP adicionado
+            .select()
+            .eq('ip', userIp);
 
         if (existingVote && existingVote.length > 0) {
             console.log("Este IP já votou.");
             return; // Bloqueia o voto
         }
 
-        // Atualiza os votos no banco de dados
+        // Atualiza os votos e insere o IP no banco de dados
         const { error } = await supabase
             .from('satisfacao')
             .update([{
@@ -110,15 +101,14 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
                 moderado: props.moderado,
                 satisfeito: props.satisfeito,
                 muito_satisfeito: props.muito_satisfeito,
-                ip: userIps[userIps.length - 1], // Adiciona o IP ao registro
+                ip: userIp,  // Armazena o IP
             }])
-            .eq('id', props.id);
+            .eq('id', props.id);  // Atualiza o registro com o ID correspondente
 
         if (error) {
             console.log("Erro ao atualizar votos no banco de dados:", error);
         } else {
-            // Atualiza o estado local após a atualização bem-sucedida
-            setVotos(props);
+            setVotos(props);  // Atualiza o estado local
         }
     }
 

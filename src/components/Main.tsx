@@ -1,4 +1,4 @@
-import { IconChartDots3, IconDownload } from "@tabler/icons-react";
+// import { IconChartDots3, IconDownload } from "@tabler/icons-react";
 import Votos from "./Votos";
 import { useContext } from "react";
 import VotosContext from "@/core/contexts/VotacaoContext";
@@ -17,56 +17,59 @@ export default function Main() {
 
     return (
         <>
-            <h2 className="text-2xl font-bold">Como você avalia sua satisfação ao ambiente?</h2>
+            <h2 className="text-2xl font-bold text-center">Como você avalia sua satisfação ao ambiente?</h2>
 
-            {/* Esse valor poderá variar dinamicamente */}
-            <span>WC Masculino - térreo Bloco B</span>
-
-            {/* Quantidade total de votos */}
-            <span>{totalVotos} Votos</span>
+            <div className="flex flex-col justify-center items-center gap-1 py-1">
+                {/* Esse valor poderá variar dinamicamente */}
+                <span>WC Masculino - térreo Bloco B</span>
+                {/* Quantidade total de votos */}
+                <span>Total de votos: {totalVotos} Votos</span>
+            </div>
 
             {/* Botões de ações */}
-            <div className="flex gap-2">
+            {/* <div className="flex gap-2">
                 <button className="flex gap-1 bg-zinc-300 rounded-full px-3 py-1">
                     <IconChartDots3 /> Analítica
                 </button>
                 <button className="flex gap-1 bg-zinc-300 rounded-full px-3 py-1">
                     <IconDownload />Exportar
                 </button>
-            </div>
+            </div> */}
 
             {/* Componentes Votos */}
-            <Votos
-                quantidadeVotos={votos.muito_insatisfeito}
-                categoria={"Muito Insatisfeito"}
-                imagem={"/assets/muito_insatisfeito.jpeg"}
-                porcentagemVotos={calcularPorcentagem(votos.muito_insatisfeito)}
+            <div className="flex flex-1 flex-col">
+                <Votos
+                    quantidadeVotos={votos.muito_insatisfeito}
+                    categoria={"Muito Insatisfeito"}
+                    imagem={"/assets/muito_insatisfeito.jpeg"}
+                    porcentagemVotos={calcularPorcentagem(votos.muito_insatisfeito)}
                 
-            />
-            <Votos
-                quantidadeVotos={votos.insatisfeito}
-                categoria={"Insatisfeito"}
-                imagem={"/assets/insatisfeito.jpeg"}
-                porcentagemVotos={calcularPorcentagem(votos.insatisfeito)}
-            />
-            <Votos
-                quantidadeVotos={votos.moderado}
-                categoria={"Moderado"}
-                imagem={"/assets/moderado.jpeg"}
-                porcentagemVotos={calcularPorcentagem(votos.moderado)}
-            />
-            <Votos
-                quantidadeVotos={votos.satisfeito}
-                categoria={"Satisfeito"}
-                imagem={"/assets/satisfeito.jpeg"}
-                porcentagemVotos={calcularPorcentagem(votos.satisfeito)}
-            />
-            <Votos
-                quantidadeVotos={votos.muito_satisfeito}
-                categoria={"Muito Satisfeito"}
-                imagem={"/assets/muito_satisfeito.jpeg"}
-                porcentagemVotos={calcularPorcentagem(votos.muito_satisfeito)}
-            />
+                />
+                <Votos
+                    quantidadeVotos={votos.insatisfeito}
+                    categoria={"Insatisfeito"}
+                    imagem={"/assets/insatisfeito.jpeg"}
+                    porcentagemVotos={calcularPorcentagem(votos.insatisfeito)}
+                />
+                <Votos
+                    quantidadeVotos={votos.moderado}
+                    categoria={"Moderado"}
+                    imagem={"/assets/moderado.jpeg"}
+                    porcentagemVotos={calcularPorcentagem(votos.moderado)}
+                />
+                <Votos
+                    quantidadeVotos={votos.satisfeito}
+                    categoria={"Satisfeito"}
+                    imagem={"/assets/satisfeito.jpeg"}
+                    porcentagemVotos={calcularPorcentagem(votos.satisfeito)}
+                />
+                <Votos
+                    quantidadeVotos={votos.muito_satisfeito}
+                    categoria={"Muito Satisfeito"}
+                    imagem={"/assets/muito_satisfeito.jpeg"}
+                    porcentagemVotos={calcularPorcentagem(votos.muito_satisfeito)}
+                />
+            </div>
         </>
     )
 };
