@@ -9,7 +9,6 @@ type TiposVotosProps = {
     satisfeito: number,
     muito_satisfeito: number,
     totalVotos: number,
-    ip: string[] // Adiciona um campo para armazenar os ip
 }
 
 type VotosContextType = {
@@ -30,7 +29,6 @@ const VotosContext = createContext<VotosContextType>({
         satisfeito: 0,
         muito_satisfeito: 0,
         totalVotos: 0,
-        ip: [] // Inicializa o array de ip vazio por padrão
     },
     putVotos: async () => { },
 });
@@ -44,16 +42,26 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
         satisfeito: 0,
         muito_satisfeito: 0,
         totalVotos: 0,
-        ip: [] // Inicializa o array de ip vazio por padrão
     });
 
-    const [userIp, setUserIp] = useState<string | null>(null);
+    const [userIps, setUserIps] = useState<string[]>([]); // Array para armazenar IPs
 
-    // Função para buscar o IP do usuário
+    // Função para buscar o IP do usuário e adicionar ao array
     const fetchUserIp = async () => {
-        const response = await fetch('/api/get_Ip');
-        const data = await response.json();
-        setUserIp(data.ip);
+        try {
+            const response = await fetch('/api/get_Ip');
+            const data = await response.json();
+            
+            // Adiciona o novo IP ao array de IPs existentes, se não existir
+            setUserIps((prevIps) => {
+                if (!prevIps.includes(data.ip)) {
+                    return [...prevIps, data.ip];
+                }
+                return prevIps; // Retorna o array anterior se o IP já existir
+            });
+        } catch (error) {
+            console.error("Erro ao buscar o IP do usuário:", error);
+        }
     };
 
     // Função para buscar votos do Supabase
@@ -64,12 +72,7 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
             .single(); // Assumindo que só há um registro
 
         if (data) {
-            // Verifica se o array 'ip' existe, senão inicializa como array vazio
-            const updatedData = {
-                ...data,
-                ip: data.ip || [] // Garante que 'ip' seja um array
-            };
-            setVotos(updatedData);   // Preenche o estado com os votos recebidos
+            setVotos(data);   // Preenche o estado com os votos recebidos
         }
         if (error) {
             console.log(error);
@@ -81,24 +84,24 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
         fetchVotos();
     }, []);
 
-    // Função para atualizar votos no Supabase
     const putVotos = async (props: TiposVotosProps) => {
-
-        if (!userIp) {
-            console.log("IP do usuário não encontrado.");
+        if (userIps.length === 0) {
+            console.log("Nenhum IP registrado.");
             return;
         }
 
-        // Verifica se o array de ip está definido e o IP já está na lista
-        if (votos.ip && votos.ip.includes(userIp)) {
+        // Verifica se o IP já votou
+        const { data: existingVote } = await supabase
+            .from('satisfacao')
+            .select('*')
+            .eq('ip', userIps[userIps.length - 1]); // Usando o último IP adicionado
+
+        if (existingVote && existingVote.length > 0) {
             console.log("Este IP já votou.");
-            return; // Bloqueia o voto se o IP já está na lista
+            return; // Bloqueia o voto
         }
 
-        // Adiciona o novo IP ao array de ip
-        const novosip = [...(votos.ip || []), userIp]; // Garante que 'votos.ip' seja um array
-
-        // Atualiza os votos e o array de ip no banco de dados
+        // Atualiza os votos no banco de dados
         const { error } = await supabase
             .from('satisfacao')
             .update([{
@@ -107,15 +110,15 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
                 moderado: props.moderado,
                 satisfeito: props.satisfeito,
                 muito_satisfeito: props.muito_satisfeito,
-                ip: novosip // Atualiza o array de ip
+                ip: userIps[userIps.length - 1], // Adiciona o IP ao registro
             }])
-            .eq('id', props.id);  // Atualiza o registro com o ID correspondente
+            .eq('id', props.id);
 
         if (error) {
             console.log("Erro ao atualizar votos no banco de dados:", error);
         } else {
-            // Atualiza o estado local com os novos votos e o array de ip atualizado
-            setVotos({ ...props, ip: novosip });
+            // Atualiza o estado local após a atualização bem-sucedida
+            setVotos(props);
         }
     }
 
