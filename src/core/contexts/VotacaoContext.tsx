@@ -46,6 +46,15 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
 
     const [id, setId] = useState<number | null>(null); // Armazena o ID do registro de votos
 
+    const [userIp, setUserIp] = useState<string | null>(null);
+
+    // Função para buscar o IP do usuário
+    const fetchUserIp = async () => {
+        const response = await fetch('/api/get_Ip');
+        const data = await response.json();
+        setUserIp(data.ip);
+    };
+
     // Função para buscar votos do Supabase
     const fetchVotos = async () => {
         const { data, error } = await supabase
@@ -64,11 +73,29 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
     };
 
     useEffect(() => {
+        fetchUserIp();
         fetchVotos();
     }, []);
 
     // Função para atualizar votos no Supabase
     const putVotos = async (props: TiposVotosProps) => {
+
+        if (!userIp) {
+            console.log("IP do usuário não encontrado.");
+            return;
+        }
+
+        // Verifica se o IP já votou
+        const { data: existingVote } = await supabase
+            .from('satisfacao')
+            .select('*')
+            .eq('ip', userIp);
+
+        if (existingVote && existingVote.length > 0) {
+            console.log("Este IP já votou.");
+            return; // Bloqueia o voto
+        }
+
         if (id) {
             // Atualiza os votos no banco de dados com base no ID
             const { error } = await supabase
@@ -79,6 +106,7 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
                     moderado: props.moderado,
                     satisfeito: props.satisfeito,
                     muito_satisfeito: props.muito_satisfeito,
+                    ip: userIp,
                 }])
                 .eq('id', props.id);  // Atualiza o registro com o ID correspondente
 
