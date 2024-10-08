@@ -76,39 +76,28 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
     // Função para atualizar votos no Supabase
     const putVotos = async (props: TiposVotosProps) => {
 
-        if (!userIp) {
-            console.log("IP do usuário não encontrado.");
+        if (!window.localStorage.getItem("ip")) {
+            window.localStorage.setItem("ip", userIp!);
+            const { error } = await supabase
+                .from('satisfacao')
+                .update([{
+                    muito_insatisfeito: props.muito_insatisfeito,
+                    insatisfeito: props.insatisfeito,
+                    moderado: props.moderado,
+                    satisfeito: props.satisfeito,
+                    muito_satisfeito: props.muito_satisfeito,
+                }])
+                .eq('id', props.id);  // Atualiza o registro com o ID correspondente
+
+            if (error) {
+                console.log("Erro ao atualizar votos no banco de dados:", error);
+            } else {
+                setVotos(props);  // Atualiza o estado local
+            }
             return;
-        }
-
-        // Verifica se o IP já votou
-        const { data: existingVote } = await supabase
-            .from('satisfacao')
-            .select()
-            .eq('ip', userIp);
-
-        if (existingVote && existingVote.length > 0) {
-            console.log("Este IP já votou.");
-            return; // Bloqueia o voto
-        }
-
-        // Atualiza os votos e insere o IP no banco de dados
-        const { error } = await supabase
-            .from('satisfacao')
-            .update([{
-                muito_insatisfeito: props.muito_insatisfeito,
-                insatisfeito: props.insatisfeito,
-                moderado: props.moderado,
-                satisfeito: props.satisfeito,
-                muito_satisfeito: props.muito_satisfeito,
-                ip: userIp,  // Armazena o IP
-            }])
-            .eq('id', props.id);  // Atualiza o registro com o ID correspondente
-
-        if (error) {
-            console.log("Erro ao atualizar votos no banco de dados:", error);
         } else {
-            setVotos(props);  // Atualiza o estado local
+            window.alert("Só é possivel votar apenas uma vez !");
+            return;
         }
     }
 
