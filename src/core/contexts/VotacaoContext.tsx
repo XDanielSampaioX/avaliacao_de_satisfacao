@@ -2,7 +2,7 @@ import { createContext, useEffect, useState } from "react";
 import supabase from "../../config/supabaseClient";
 
 type TiposVotosProps = {
-    id : number,
+    id: number,
     muito_insatisfeito: number,
     insatisfeito: number,
     moderado: number,
@@ -44,8 +44,6 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
         totalVotos: 0,
     });
 
-    const [id, setId] = useState<number | null>(null); // Armazena o ID do registro de votos
-
     const [userIp, setUserIp] = useState<string | null>(null);
 
     // Função para buscar o IP do usuário
@@ -64,8 +62,6 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
 
         if (data) {
             setVotos(data);   // Preenche o estado com os votos recebidos
-            setId(data.id);   // Armazena o ID do registro
-            console.log(data);
         }
         if (error) {
             console.log(error);
@@ -96,28 +92,23 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
             return; // Bloqueia o voto
         }
 
-        if (id) {
-            // Atualiza os votos no banco de dados com base no ID
-            const { error } = await supabase
-                .from('satisfacao')
-                .update([{
-                    muito_insatisfeito: props.muito_insatisfeito,
-                    insatisfeito: props.insatisfeito,
-                    moderado: props.moderado,
-                    satisfeito: props.satisfeito,
-                    muito_satisfeito: props.muito_satisfeito,
-                    ip: userIp,
-                }])
-                .eq('id', props.id);  // Atualiza o registro com o ID correspondente
+        // Atualiza os votos e insere o IP no banco de dados
+        const { error } = await supabase
+            .from('satisfacao')
+            .update([{
+                muito_insatisfeito: props.muito_insatisfeito,
+                insatisfeito: props.insatisfeito,
+                moderado: props.moderado,
+                satisfeito: props.satisfeito,
+                muito_satisfeito: props.muito_satisfeito,
+                ip: userIp,  // Armazena o IP
+            }])
+            .eq('id', props.id);  // Atualiza o registro com o ID correspondente
 
-            if (error) {
-                console.log("Erro ao atualizar votos no banco de dados:", error);
-            } else {
-                // Atualiza o estado local após a atualização bem-sucedida
-                setVotos(props);
-            }
+        if (error) {
+            console.log("Erro ao atualizar votos no banco de dados:", error);
         } else {
-            console.log("ID do registro não encontrado!");
+            setVotos(props);  // Atualiza o estado local
         }
     }
 
