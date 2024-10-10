@@ -3,16 +3,18 @@ import supabase from "../../config/supabaseClient";
 
 type TiposVotosProps = {
     id: number,
+    nome_enquete: string,
     muito_insatisfeito: number,
     insatisfeito: number,
     moderado: number,
     satisfeito: number,
     muito_satisfeito: number,
     totalVotos: number,
+    created_at: string
 }
 
 type VotosContextType = {
-    votos: TiposVotosProps,
+    votos: TiposVotosProps[],
     putVotos: (votos: TiposVotosProps) => Promise<void>;
 }
 
@@ -21,28 +23,13 @@ type VotosContextProps = {
 }
 
 const VotosContext = createContext<VotosContextType>({
-    votos: {
-        id: 0,
-        muito_insatisfeito: 0,
-        insatisfeito: 0,
-        moderado: 0,
-        satisfeito: 0,
-        muito_satisfeito: 0,
-        totalVotos: 0,
-    },
+    votos: [],
     putVotos: async () => { },
 });
 
 export const VotosContextProvider = ({ children }: VotosContextProps) => {
-    const [votos, setVotos] = useState<TiposVotosProps>({
-        id: 0,
-        muito_insatisfeito: 0,
-        insatisfeito: 0,
-        moderado: 0,
-        satisfeito: 0,
-        muito_satisfeito: 0,
-        totalVotos: 0,
-    });
+    // Inicializa o estado com um array de TiposVotosProps corretamente tipado
+    const [votos, setVotos] = useState<TiposVotosProps[]>([]);
 
     const [userIp, setUserIp] = useState<string | null>(null);
 
@@ -57,11 +44,10 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
     const fetchVotos = async () => {
         const { data, error } = await supabase
             .from('satisfacao')
-            .select()
-            .single(); // Assumindo que só há um registro
+            .select();
 
         if (data) {
-            setVotos(data);   // Preenche o estado com os votos recebidos
+            setVotos(data as TiposVotosProps[]);   // Preenche o estado com os votos recebidos e garante a tipagem correta
         }
         if (error) {
             console.log(error);
@@ -86,17 +72,21 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
                     moderado: props.moderado,
                     satisfeito: props.satisfeito,
                     muito_satisfeito: props.muito_satisfeito,
+                    totalVotos: props.muito_insatisfeito + props.insatisfeito + props.moderado + props.satisfeito + props.muito_satisfeito,
                 }])
                 .eq('id', props.id);  // Atualiza o registro com o ID correspondente
 
             if (error) {
                 console.log("Erro ao atualizar votos no banco de dados:", error);
             } else {
-                setVotos(props);  // Atualiza o estado local
+                // Atualiza o estado local, substituindo o voto atualizado
+                setVotos(prevVotos =>
+                    prevVotos.map(voto => voto.id === props.id ? props : voto)
+                );
             }
             return;
         } else {
-            window.alert("Só é possivel votar apenas uma vez !");
+            window.alert("Só é possível votar apenas uma vez!");
             return;
         }
     }

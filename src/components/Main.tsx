@@ -1,19 +1,27 @@
-// import { IconChartDots3, IconDownload } from "@tabler/icons-react";
 import Votos from "./Votos";
 import { useContext } from "react";
 import VotosContext from "@/core/contexts/VotacaoContext";
+import Link from "next/link";
 
 export default function Main() {
-
     const { votos } = useContext(VotosContext);
 
+    // Garantir que há votos disponíveis no array antes de acessá-los
+    const votosAtuais = votos.length > 0 ? votos[0] : {
+        muito_insatisfeito: 0,
+        insatisfeito: 0,
+        moderado: 0,
+        satisfeito: 0,
+        muito_satisfeito: 0
+    };
+
     // Calcular total de votos
-    const totalVotos = votos.muito_insatisfeito + votos.insatisfeito + votos.moderado + votos.satisfeito + votos.muito_satisfeito;
+    const totalVotos = votosAtuais.muito_insatisfeito + votosAtuais.insatisfeito + votosAtuais.moderado + votosAtuais.satisfeito + votosAtuais.muito_satisfeito;
 
     // Função para calcular porcentagem
     const calcularPorcentagem = (quantidade: number) => {
         return totalVotos > 0 ? +((quantidade / totalVotos) * 100).toFixed(2) : 0;
-    }
+    };
 
     return (
         <>
@@ -26,50 +34,41 @@ export default function Main() {
                 <span>Total de votos: {totalVotos} Votos</span>
             </div>
 
-            {/* Botões de ações */}
-            {/* <div className="flex gap-2">
-                <button className="flex gap-1 bg-zinc-300 rounded-full px-3 py-1">
-                    <IconChartDots3 /> Analítica
-                </button>
-                <button className="flex gap-1 bg-zinc-300 rounded-full px-3 py-1">
-                    <IconDownload />Exportar
-                </button>
-            </div> */}
-
             {/* Componentes Votos */}
             <div className="flex flex-1 flex-col">
                 <Votos
-                    quantidadeVotos={votos.muito_insatisfeito}
+                    quantidadeVotos={votosAtuais.muito_insatisfeito}
                     categoria={"Muito Insatisfeito"}
                     imagem={"/assets/muito_insatisfeito.jpeg"}
-                    porcentagemVotos={calcularPorcentagem(votos.muito_insatisfeito)}
-                
+                    porcentagemVotos={calcularPorcentagem(votosAtuais.muito_insatisfeito)}
                 />
                 <Votos
-                    quantidadeVotos={votos.insatisfeito}
+                    quantidadeVotos={votosAtuais.insatisfeito}
                     categoria={"Insatisfeito"}
                     imagem={"/assets/insatisfeito.jpeg"}
-                    porcentagemVotos={calcularPorcentagem(votos.insatisfeito)}
+                    porcentagemVotos={calcularPorcentagem(votosAtuais.insatisfeito)}
                 />
                 <Votos
-                    quantidadeVotos={votos.moderado}
+                    quantidadeVotos={votosAtuais.moderado}
                     categoria={"Moderado"}
                     imagem={"/assets/moderado.jpeg"}
-                    porcentagemVotos={calcularPorcentagem(votos.moderado)}
+                    porcentagemVotos={calcularPorcentagem(votosAtuais.moderado)}
                 />
                 <Votos
-                    quantidadeVotos={votos.satisfeito}
+                    quantidadeVotos={votosAtuais.satisfeito}
                     categoria={"Satisfeito"}
                     imagem={"/assets/satisfeito.jpeg"}
-                    porcentagemVotos={calcularPorcentagem(votos.satisfeito)}
+                    porcentagemVotos={calcularPorcentagem(votosAtuais.satisfeito)}
                 />
                 <Votos
-                    quantidadeVotos={votos.muito_satisfeito}
+                    quantidadeVotos={votosAtuais.muito_satisfeito}
                     categoria={"Muito Satisfeito"}
                     imagem={"/assets/muito_satisfeito.jpeg"}
-                    porcentagemVotos={calcularPorcentagem(votos.muito_satisfeito)}
+                    porcentagemVotos={calcularPorcentagem(votosAtuais.muito_satisfeito)}
                 />
+
+                <Link href="/Home">ir pra pagina admin</Link>
             </div>
         </>
-    )
-};
+    );
+}
