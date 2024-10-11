@@ -1,6 +1,6 @@
 import Votos from "./Votos";
 import { useContext } from "react";
-import VotosContext from "@/core/contexts/VotacaoContext";
+import VotosContext from "@/data/contexts/VotacaoContext";
 import Link from "next/link";
 
 export default function Main() {

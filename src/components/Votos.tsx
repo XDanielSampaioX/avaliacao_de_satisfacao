@@ -1,4 +1,4 @@
-import VotosContext from "@/core/contexts/VotacaoContext";
+import VotosContext from "@/data/contexts/VotacaoContext";
 import Image from "next/image";
 import { useContext } from "react";
 

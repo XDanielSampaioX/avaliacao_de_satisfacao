@@ -1,4 +1,4 @@
-import { VotosContextProvider } from "@/core/contexts/VotacaoContext";
+import { VotosContextProvider } from "@/data/contexts/VotacaoContext";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 

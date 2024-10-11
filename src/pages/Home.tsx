@@ -1,4 +1,4 @@
-import VotosContext from "@/core/contexts/VotacaoContext";
+import VotosContext from "@/data/contexts/VotacaoContext";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
 import Link from "next/link";
 import { useContext } from "react";
