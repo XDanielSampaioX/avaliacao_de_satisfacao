@@ -10,12 +10,12 @@ interface VotosProps {
 }
 
 export default function Votos(props: VotosProps) {
-    const { votos, putVotos } = useContext(VotosContext);
+    const { enquete, putVotos } = useContext(VotosContext);
 
     // Função para atualizar os votos com base na categoria
     const handleVote = () => {
         // Procura pelo item de votos correspondente no array baseado na categoria
-        const votoAtual = votos.find(voto => {
+        const votoAtual = enquete.find(voto => {
             switch (props.categoria) {
                 case "Muito Insatisfeito": return voto.muito_insatisfeito;
                 case "Insatisfeito": return voto.insatisfeito;
@@ -24,6 +24,12 @@ export default function Votos(props: VotosProps) {
                 case "Muito Satisfeito": return voto.muito_satisfeito;
             }
         });
+
+        console.log(votoAtual);
+        enquete.find(enquetes => {
+            console.log(enquetes);
+        });
+        
 
         if (votoAtual) {
             const novosVotos = { ...votoAtual };

@@ -1,68 +1,79 @@
+'use client'
+
 import { createContext, useEffect, useState } from "react";
 import supabase from "../../config/supabaseClient";
 
-type TiposVotosProps = {
-    id?: number;
-    nome_enquete: string;
-    descricao: string;
-    prazo_votacao: string;
-    muito_insatisfeito?: number;
-    insatisfeito?: number;
-    moderado?: number;
-    satisfeito?: number;
-    muito_satisfeito?: number;
-    totalVotos?: number;
-};
-
-type VotosContextType = {
-    votos: TiposVotosProps[];
-    postVotos: (votos: TiposVotosProps) => Promise<void>;
+type VotacaoContextType = {
+    enquete: TiposVotosProps[];
+    fetchVotos: () => Promise<void>,
+    postVotos: (votos: TipoLocalVotacaoProps) => Promise<void>;
     putVotos: (votos: TiposVotosProps) => Promise<void>;
 };
 
-type VotosContextProps = {
-    children: React.ReactNode;
+type TipoLocalVotacaoProps = {
+    nome_enquete: string;
+    prazo_votacao: string;
+    local_enquete: string;
+}
+
+type TiposVotosProps = {
+    id: number;
+    muito_insatisfeito: number;
+    insatisfeito: number;
+    moderado: number;
+    satisfeito: number;
+    muito_satisfeito: number;
+    totalVotos: number;
+    local_votacao: {
+        id: number;
+        nome_enquete: string;
+        prazo_votacao: string;
+        local_enquete: string;
+    };
 };
 
-const VotosContext = createContext<VotosContextType>({
-    votos: [],
-    postVotos: async () => {},
-    putVotos: async () => {},
+const VotacaoContext = createContext<VotacaoContextType>({
+    enquete: [],
+    fetchVotos: async () => { },
+    postVotos: async () => { },
+    putVotos: async () => { },
 });
 
-export const VotosContextProvider = ({ children }: VotosContextProps) => {
-    const [votos, setVotos] = useState<TiposVotosProps[]>([]);
+export const VotacaoContextProvider = ({ children }: { children: React.ReactNode }) => {
+    const [enquete, setEnquete] = useState<TiposVotosProps[]>([]);
     const [userIp, setUserIp] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const fetchUserIp = async () => {
-        const response = await fetch('/api/get_Ip');
+        const response = await fetch('../../api/get_Ip');
         const data = await response.json();
         setUserIp(data.ip);
     };
 
     const fetchVotos = async () => {
-        const { data, error } = await supabase.from('satisfacao').select();
+        const { data, error } = await supabase
+            .from('satisfacao')
+            .select(`*,local_votacao (id, nome_enquete, prazo_votacao, local_enquete)`);
         if (error) {
-            console.log(error);
+            console.error("Erro ao buscar votos do Supabase:", error);
             setErrorMessage("Erro ao buscar votos.");
         } else if (data) {
-            setVotos(data as TiposVotosProps[]);
+            setEnquete(data); // Atualiza o estado com os dados retornados
         }
     };
 
     useEffect(() => {
         fetchUserIp();
         fetchVotos();
-    }, []);
+    }, []); // Array de dependências vazio para que seja executado apenas uma vez
 
-    const postVotos = async (props: TiposVotosProps) => { 
-        const { data, error } = await supabase.from('satisfacao').insert([{ ...props ,local_votacao_id:props.id}]).select();
+    const postVotos = async (props: TipoLocalVotacaoProps) => {
+        const { data, error } = await supabase.from('local_votacao').insert([{ ...props }]).select();
         if (error) {
             console.log("Erro ao inserir voto:", error);
             setErrorMessage("Erro ao inserir voto.");
         } else if (data) {
-            setVotos((prev) => [...prev, ...data]);
+            setEnquete((prev) => [...prev, ...data]);
         }
     };
 
@@ -78,7 +89,8 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
                     satisfeito: props.satisfeito,
                     muito_satisfeito: props.muito_satisfeito,
                     totalVotos: (props.muito_insatisfeito ?? 0) + (props.insatisfeito ?? 0) +
-                                (props.moderado ?? 0) + (props.satisfeito ?? 0) + (props.muito_satisfeito ?? 0)
+                        (props.moderado ?? 0) + (props.satisfeito ?? 0) + (props.muito_satisfeito ?? 0),
+                    local_votacao_id: props.local_votacao.id
                 })
                 .eq('id', props.id);
 
@@ -86,7 +98,7 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
                 console.log("Erro ao atualizar votos no banco de dados:", error);
                 setErrorMessage("Erro ao atualizar votos.");
             } else {
-                setVotos(prevVotos =>
+                setEnquete(prevVotos =>
                     prevVotos.map(voto => voto.id === props.id ? { ...voto, ...props } : voto)
                 );
             }
@@ -96,11 +108,11 @@ export const VotosContextProvider = ({ children }: VotosContextProps) => {
     };
 
     return (
-        <VotosContext.Provider value={{ votos, postVotos, putVotos }}>
+        <VotacaoContext.Provider value={{ enquete, fetchVotos, postVotos, putVotos }}>
             {errorMessage && <div className="error">{errorMessage}</div>}
             {children}
-        </VotosContext.Provider>
+        </VotacaoContext.Provider>
     );
-};
+}
 
-export default VotosContext;
+export default VotacaoContext;
