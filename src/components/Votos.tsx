@@ -14,22 +14,8 @@ export default function Votos(props: VotosProps) {
 
     // Função para atualizar os votos com base na categoria
     const handleVote = () => {
-        // Procura pelo item de votos correspondente no array baseado na categoria
-        const votoAtual = enquete.find(voto => {
-            switch (props.categoria) {
-                case "Muito Insatisfeito": return voto.muito_insatisfeito;
-                case "Insatisfeito": return voto.insatisfeito;
-                case "Moderado": return voto.moderado;
-                case "Satisfeito": return voto.satisfeito;
-                case "Muito Satisfeito": return voto.muito_satisfeito;
-            }
-        });
-
-        console.log(votoAtual);
-        enquete.find(enquetes => {
-            console.log(enquetes);
-        });
-        
+        // Procura pelo item de votos correspondente no array
+        const votoAtual = enquete.find(voto => voto);
 
         if (votoAtual) {
             const novosVotos = { ...votoAtual };
@@ -51,6 +37,9 @@ export default function Votos(props: VotosProps) {
                 case "Muito Satisfeito":
                     novosVotos.muito_satisfeito += 1;
                     break;
+                default:
+                    console.log("Categoria de voto não encontrada");
+                    return;
             }
 
             // Atualiza o total de votos
@@ -78,6 +67,7 @@ export default function Votos(props: VotosProps) {
                     alt={"Avaliacao"}
                     width={50}
                     height={50}
+                    priority
                 />
             </div>
         </button>

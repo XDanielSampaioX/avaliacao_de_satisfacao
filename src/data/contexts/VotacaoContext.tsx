@@ -11,6 +11,7 @@ type VotacaoContextType = {
 };
 
 type TipoLocalVotacaoProps = {
+    id: number;
     nome_enquete: string;
     prazo_votacao: string;
     local_enquete: string;
@@ -24,12 +25,7 @@ type TiposVotosProps = {
     satisfeito: number;
     muito_satisfeito: number;
     totalVotos: number;
-    local_votacao: {
-        id: number;
-        nome_enquete: string;
-        prazo_votacao: string;
-        local_enquete: string;
-    };
+    local_votacao: TipoLocalVotacaoProps
 };
 
 const VotacaoContext = createContext<VotacaoContextType>({
@@ -101,9 +97,11 @@ export const VotacaoContextProvider = ({ children }: { children: React.ReactNode
                 setEnquete(prevVotos =>
                     prevVotos.map(voto => voto.id === props.id ? { ...voto, ...props } : voto)
                 );
+                fetchVotos();
             }
         } else {
             window.alert("Só é possível votar apenas uma vez!");
+            fetchVotos();
         }
     };
 
