@@ -3,11 +3,13 @@ import Image from "next/image";
 import { useContext } from "react";
 
 interface VotosProps {
+    id: number;
     quantidadeVotos: number;
     categoria: string;
     imagem: string;
     porcentagemVotos: number;
 }
+
 
 export default function Votos(props: VotosProps) {
     const { enquete, putVotos } = useContext(VotosContext);
@@ -15,7 +17,7 @@ export default function Votos(props: VotosProps) {
     // Função para atualizar os votos com base na categoria
     const handleVote = () => {
         // Procura pelo item de votos correspondente no array
-        const votoAtual = enquete.find(voto => voto);
+        const votoAtual = enquete.find(voto => voto.id === props.id);
 
         if (votoAtual) {
             const novosVotos = { ...votoAtual };
@@ -53,7 +55,7 @@ export default function Votos(props: VotosProps) {
     };
 
     return (
-        <button onClick={handleVote} className="flex items-center justify-between p-3 border-zinc-300 border-2 rounded-md">
+        <button onClick={handleVote} className="flex w-full justify-between p-3 border-zinc-300 border rounded-md">
             <div>
                 <h3 className="text-xl">{props.categoria}</h3>
                 <span className="text-sm">

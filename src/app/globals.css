@@ -2,3 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+    .container {
+        @apply w-[375px] h-screen mx-auto
+    }
+    
+}

@@ -11,7 +11,7 @@ type VotacaoContextType = {
 };
 
 type TipoLocalVotacaoProps = {
-    id: number;
+    id?: number;
     nome_enquete: string;
     prazo_votacao: string;
     local_enquete: string;
@@ -65,16 +65,28 @@ export const VotacaoContextProvider = ({ children }: { children: React.ReactNode
 
     const postVotos = async (props: TipoLocalVotacaoProps) => {
         const { data, error } = await supabase.from('local_votacao').insert([{ ...props }]).select();
+        const { data: satisfacaoData, error: satisfacaoError } = await supabase
+            .from('satisfacao')
+            .insert([{}]) // Você pode ajustar o que será inserido na tabela 'satisfacao'
+            .select();
+
+        if (satisfacaoError) {
+            console.log("Erro ao inserir voto em satisfacao:", satisfacaoError);
+            setErrorMessage("Erro ao inserir voto em satisfacao.");
+        } else if (satisfacaoData) {
+            console.log("Voto inserido com sucesso em satisfacao:", satisfacaoData);
+        }
         if (error) {
             console.log("Erro ao inserir voto:", error);
             setErrorMessage("Erro ao inserir voto.");
         } else if (data) {
             setEnquete((prev) => [...prev, ...data]);
+            fetchVotos();
         }
     };
 
     const putVotos = async (props: TiposVotosProps) => {
-        if (!window.localStorage.getItem("ip")) {
+        if (window.localStorage.getItem("ip")) {
             window.localStorage.setItem("ip", userIp!);
             const { error } = await supabase
                 .from('satisfacao')
@@ -84,11 +96,13 @@ export const VotacaoContextProvider = ({ children }: { children: React.ReactNode
                     moderado: props.moderado,
                     satisfeito: props.satisfeito,
                     muito_satisfeito: props.muito_satisfeito,
-                    totalVotos: (props.muito_insatisfeito ?? 0) + (props.insatisfeito ?? 0) +
-                        (props.moderado ?? 0) + (props.satisfeito ?? 0) + (props.muito_satisfeito ?? 0),
+                    totalVotos: (props.muito_insatisfeito) + (props.insatisfeito) +
+                        (props.moderado) + (props.satisfeito) + (props.muito_satisfeito),
                     local_votacao_id: props.local_votacao.id
                 })
                 .eq('id', props.id);
+            console.log("ID para atualização:", props.id);
+
 
             if (error) {
                 console.log("Erro ao atualizar votos no banco de dados:", error);
