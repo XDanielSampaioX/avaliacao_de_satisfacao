@@ -86,7 +86,7 @@ export const VotacaoContextProvider = ({ children }: { children: React.ReactNode
     };
 
     const putVotos = async (props: TiposVotosProps) => {
-        if (window.localStorage.getItem("ip")) {
+        if (!window.localStorage.getItem("ip")) {
             window.localStorage.setItem("ip", userIp!);
             const { error } = await supabase
                 .from('satisfacao')
