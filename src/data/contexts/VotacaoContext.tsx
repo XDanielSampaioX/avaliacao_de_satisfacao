@@ -41,7 +41,7 @@ export const VotacaoContextProvider = ({ children }: { children: React.ReactNode
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const fetchUserIp = async () => {
-        const response = await fetch('../../api/get_Ip');
+        const response = await fetch('/api/get_Ip');
         const data = await response.json();
         setUserIp(data.ip);
     };
