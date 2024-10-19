@@ -2,13 +2,16 @@
 import { NextResponse } from 'next/server';
 import supabase from '@/config/supabaseClient';
 
-const convertToCSV = (data: any[]) => {
+// Define o tipo para os dados de qualquer tabela
+type TableData = Record<string, string | number | boolean | null>;
+
+const convertToCSV = (data: TableData[]): string => {
     const headers = Object.keys(data[0]).join(',') + '\n'; // Cabeçalhos CSV
     const rows = data.map(row => Object.values(row).join(',')).join('\n'); // Dados CSV
     return headers + rows; // Combina cabeçalhos e dados
 };
 
-export async function GET(req: Request) {
+export async function GET(req: Request): Promise<Response> {
     const { searchParams } = new URL(req.url);
     const localVotacaoId = searchParams.get('id'); // Obtém o ID da query string
 
@@ -37,7 +40,7 @@ export async function GET(req: Request) {
     }
 
     // Verifica se os dados foram encontrados
-    if (satisfacaoData.length === 0 || localVotacaoData.length === 0) {
+    if (!satisfacaoData || !localVotacaoData || satisfacaoData.length === 0 || localVotacaoData.length === 0) {
         return NextResponse.json({ error: 'No data found for the provided ID' }, { status: 404 });
     }
 
