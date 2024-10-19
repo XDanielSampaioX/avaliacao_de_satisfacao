@@ -3,7 +3,6 @@ interface DataValidadeProps {
 }
 
 export default function DataValidade(props: DataValidadeProps) {
-    console.log(props.data_enquete)
     const date = new Date(props.data_enquete);
 
     // Extrair dia, mês e ano
@@ -15,7 +14,7 @@ export default function DataValidade(props: DataValidadeProps) {
 
     return (
         <>
-            <span className="flex justify-center items-center">Avotação é possivel até {formattedDate}</span>
+            <span className="flex justify-center items-center text-zinc-400">Avotação é possivel até {formattedDate}</span>
         </>
     )
 };

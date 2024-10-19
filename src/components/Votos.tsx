@@ -56,7 +56,7 @@ export default function Votos(props: VotosProps) {
 
     return (
         <button onClick={handleVote} className="flex w-full justify-between p-3 border-zinc-300 border rounded-md">
-            <div>
+            <div className="text-start">
                 <h3 className="text-xl">{props.categoria}</h3>
                 <span className="text-sm">
                     {props.quantidadeVotos} votos, {props.porcentagemVotos}%

@@ -20,7 +20,7 @@ export default function Home() {
         ))}
       </div>
       <Link href="/NovaVotacao">
-        <IconCirclePlusFilled className="absolute bottom-5 right-3 w-12 h-12 text-blue-500" />
+        <IconCirclePlusFilled className="absolute bottom-5 right-2 w-12 h-12 text-blue-500" />
       </Link>
     </div>
   );
