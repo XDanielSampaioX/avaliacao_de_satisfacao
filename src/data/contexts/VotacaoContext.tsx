@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import { createContext, useEffect, useState } from "react";
 import supabase from "../../config/supabaseClient";
@@ -25,15 +25,14 @@ type TiposVotosProps = {
     satisfeito: number;
     muito_satisfeito: number;
     totalVotos: number;
-    ip: string[];
     local_votacao: TipoLocalVotacaoProps;
 };
 
 const VotacaoContext = createContext<VotacaoContextType>({
     enquete: [],
-    fetchVotos: async () => {},
-    postVotos: async () => {},
-    putVotos: async () => {},
+    fetchVotos: async () => { },
+    postVotos: async () => { },
+    putVotos: async () => { },
 });
 
 export const VotacaoContextProvider = ({ children }: { children: React.ReactNode }) => {
@@ -41,67 +40,53 @@ export const VotacaoContextProvider = ({ children }: { children: React.ReactNode
     const [userIp, setUserIp] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+    // Função para buscar o IP do usuário
     const fetchUserIp = async () => {
-        try {
-            const response = await fetch('/api/get_Ip');
-            const data = await response.json();
-            setUserIp(data.ip);
-        } catch (error) {
-            console.error("Erro ao buscar IP do usuário:", error);
-        }
+        const response = await fetch('/api/get-device');
+        const data = await response.json();
+        setUserIp(data.ip);
+        console.log("User IP:", data.ip);
     };
 
+    // Função para buscar votos da tabela 'satisfacao'
     const fetchVotos = async () => {
-        try {
-            const { data, error } = await supabase
-                .from('satisfacao')
-                .select(`*,local_votacao (id, nome_enquete, prazo_votacao, local_enquete)`);
-            if (error) throw error;
-            setEnquete(data || []);
-        } catch (error) {
+        const { data, error } = await supabase
+            .from('satisfacao')
+            .select(`*, local_votacao (id, nome_enquete, prazo_votacao, local_enquete)`);
+
+        if (error) {
             console.error("Erro ao buscar votos do Supabase:", error);
             setErrorMessage("Erro ao buscar votos.");
+        } else if (data) {
+            setEnquete(data); // Atualiza o estado com os dados retornados
         }
     };
 
     useEffect(() => {
         fetchUserIp();
         fetchVotos();
-    }, []);
+    }, []); // Executado apenas uma vez no carregamento do componente
 
+    // Função para postar votos na tabela 'local_votacao'
     const postVotos = async (props: TipoLocalVotacaoProps) => {
-        try {
-            const { data: localData, error: localError } = await supabase
-                .from('local_votacao')
-                .insert([props])
-                .select();
-            if (localError) throw localError;
+        const { data, error } = await supabase.from('local_votacao').insert([{ ...props }]).select();
 
-            const { data: satisfacaoData, error: satisfacaoError } = await supabase
-                .from('satisfacao')
-                .insert([{ local_votacao_id: localData[0].id }]) // Ajustar conforme necessário
-                .select();
-            if (satisfacaoError) throw satisfacaoError;
-
-            setEnquete((prev) => [...prev, ...satisfacaoData]);
-            fetchVotos();
-        } catch (error) {
-            console.error("Erro ao inserir voto:", error);
+        if (error) {
+            console.log("Erro ao inserir voto:", error);
             setErrorMessage("Erro ao inserir voto.");
+        } else if (data) {
+            console.log("Voto inserido com sucesso:", data);
+            setEnquete((prev) => [...prev, ...data]);
+            fetchVotos(); // Atualiza a lista de votos após a inserção
         }
     };
 
+    // Função para atualizar votos na tabela 'satisfacao'
     const putVotos = async (props: TiposVotosProps) => {
-        // Garante que props.ip seja um array válido
-        const existingIps = props.ip || [];
+        // Verifica se o usuário já votou
+        if (!window.localStorage.getItem("ip")) {
+            window.localStorage.setItem("ip", userIp!); // Armazena o IP no localStorage
 
-        if (existingIps.includes(userIp || "")) {
-            window.alert("Só é possível votar apenas uma vez!");
-            return;
-        }
-
-        try {
-            const updatedIps = [...existingIps, userIp || ""];
             const { error } = await supabase
                 .from('satisfacao')
                 .update({
@@ -110,22 +95,23 @@ export const VotacaoContextProvider = ({ children }: { children: React.ReactNode
                     moderado: props.moderado,
                     satisfeito: props.satisfeito,
                     muito_satisfeito: props.muito_satisfeito,
-                    totalVotos: props.muito_insatisfeito + props.insatisfeito +
-                        props.moderado + props.satisfeito + props.muito_satisfeito,
-                    local_votacao_id: props.local_votacao.id,
-                    ip: updatedIps
+                    totalVotos: (props.muito_insatisfeito + props.insatisfeito + props.moderado + props.satisfeito + props.muito_satisfeito),
+                    local_votacao_id: props.local_votacao.id // Atualiza a referência para local_votacao
                 })
                 .eq('id', props.id);
-            
-            if (error) throw error;
 
-            setEnquete(prevVotos =>
-                prevVotos.map(voto => voto.id === props.id ? { ...voto, ...props, ip: updatedIps } : voto)
-            );
-            fetchVotos();
-        } catch (error) {
-            console.error("Erro ao atualizar votos no banco de dados:", error);
-            setErrorMessage("Erro ao atualizar votos.");
+            if (error) {
+                console.log("Erro ao atualizar votos no banco de dados:", error);
+                setErrorMessage("Erro ao atualizar votos.");
+            } else {
+                // Atualiza o estado local com os novos dados
+                setEnquete(prevVotos =>
+                    prevVotos.map(voto => voto.id === props.id ? { ...voto, ...props } : voto)
+                );
+                fetchVotos(); // Atualiza a lista de votos após a atualização
+            }
+        } else {
+            window.alert("Só é possível votar apenas uma vez!");
         }
     };
 
@@ -135,6 +121,6 @@ export const VotacaoContextProvider = ({ children }: { children: React.ReactNode
             {children}
         </VotacaoContext.Provider>
     );
-};
+}
 
 export default VotacaoContext;

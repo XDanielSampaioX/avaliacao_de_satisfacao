@@ -9,14 +9,17 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^4.5.1",
     "@supabase/supabase-js": "^2.45.4",
     "@tabler/icons-react": "^3.19.0",
+    "fingerprintjs2": "^2.1.4",
     "next": "14.2.15",
     "npm": "^10.9.0",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/fingerprintjs2": "^2.0.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

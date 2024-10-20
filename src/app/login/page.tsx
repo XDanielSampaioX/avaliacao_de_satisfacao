@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import supabase from '@/config/supabaseClient';
 import { User as SupabaseUser } from '@supabase/auth-js'; // Importe o tipo User do Supabase
+import DeviceIdentifier from '../Teste';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -49,6 +50,7 @@ const Login = () => {
                     <button onClick={handleLogin}>Login</button>
                 </div>
             )}
+            <DeviceIdentifier/>
         </div>
     );
 };
