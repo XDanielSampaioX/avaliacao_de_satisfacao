@@ -9,7 +9,7 @@ import Link from "next/link";
 export default function Home() {
   const { enquete } = useContext(VotacaoContext);
 
-  return (
+    return (
     <div className="relative container violet-dark">
       <div className="text-xl shadow-sm border-b border-gray-300">
         <h2 className="m-3 pl-5">Suas enquetes</h2>
