@@ -37,16 +37,7 @@ const VotacaoContext = createContext<VotacaoContextType>({
 
 export const VotacaoContextProvider = ({ children }: { children: React.ReactNode }) => {
     const [enquete, setEnquete] = useState<TiposVotosProps[]>([]);
-    const [userIp, setUserIp] = useState<string | null>(null);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    // Função para buscar o IP do usuário
-    const fetchUserIp = async () => {
-        const response = await fetch('/api/get-device');
-        const data = await response.json();
-        setUserIp(data.ip);
-        console.log("User IP:", data.ip);
-    };
 
     // Função para buscar votos da tabela 'satisfacao'
     const fetchVotos = async () => {
@@ -63,7 +54,6 @@ export const VotacaoContextProvider = ({ children }: { children: React.ReactNode
     };
 
     useEffect(() => {
-        fetchUserIp();
         fetchVotos();
     }, []); // Executado apenas uma vez no carregamento do componente
 
@@ -83,35 +73,28 @@ export const VotacaoContextProvider = ({ children }: { children: React.ReactNode
 
     // Função para atualizar votos na tabela 'satisfacao'
     const putVotos = async (props: TiposVotosProps) => {
-        // Verifica se o usuário já votou
-        if (!window.localStorage.getItem("ip")) {
-            window.localStorage.setItem("ip", userIp!); // Armazena o IP no localStorage
+        const { error } = await supabase
+            .from('satisfacao')
+            .update({
+                muito_insatisfeito: props.muito_insatisfeito,
+                insatisfeito: props.insatisfeito,
+                moderado: props.moderado,
+                satisfeito: props.satisfeito,
+                muito_satisfeito: props.muito_satisfeito,
+                totalVotos: (props.muito_insatisfeito + props.insatisfeito + props.moderado + props.satisfeito + props.muito_satisfeito),
+                local_votacao_id: props.local_votacao.id // Atualiza a referência para local_votacao
+            })
+            .eq('id', props.id);
 
-            const { error } = await supabase
-                .from('satisfacao')
-                .update({
-                    muito_insatisfeito: props.muito_insatisfeito,
-                    insatisfeito: props.insatisfeito,
-                    moderado: props.moderado,
-                    satisfeito: props.satisfeito,
-                    muito_satisfeito: props.muito_satisfeito,
-                    totalVotos: (props.muito_insatisfeito + props.insatisfeito + props.moderado + props.satisfeito + props.muito_satisfeito),
-                    local_votacao_id: props.local_votacao.id // Atualiza a referência para local_votacao
-                })
-                .eq('id', props.id);
-
-            if (error) {
-                console.log("Erro ao atualizar votos no banco de dados:", error);
-                setErrorMessage("Erro ao atualizar votos.");
-            } else {
-                // Atualiza o estado local com os novos dados
-                setEnquete(prevVotos =>
-                    prevVotos.map(voto => voto.id === props.id ? { ...voto, ...props } : voto)
-                );
-                fetchVotos(); // Atualiza a lista de votos após a atualização
-            }
+        if (error) {
+            console.log("Erro ao atualizar votos no banco de dados:", error);
+            setErrorMessage("Erro ao atualizar votos.");
         } else {
-            window.alert("Só é possível votar apenas uma vez!");
+            // Atualiza o estado local com os novos dados
+            setEnquete(prevVotos =>
+                prevVotos.map(voto => voto.id === props.id ? { ...voto, ...props } : voto)
+            );
+            fetchVotos(); // Atualiza a lista de votos após a atualização
         }
     };
 

@@ -1,6 +1,7 @@
 import VotosContext from "@/data/contexts/VotacaoContext";
 import Image from "next/image";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 interface VotosProps {
     id: number;
@@ -10,12 +11,23 @@ interface VotosProps {
     porcentagemVotos: number;
 }
 
-
 export default function Votos(props: VotosProps) {
     const { enquete, putVotos } = useContext(VotosContext);
+    const pathname = usePathname();
+    const [botaoClicado, setBotaoClicado] = useState(false);
+
+    useEffect(() => {
+        // Verifica se o botão foi clicado ao carregar a página e se a rota corresponde à rota atual
+        const isClicked = localStorage.getItem(`botaoClicado_${pathname}`) === 'true';
+        setBotaoClicado(isClicked);
+    }, [pathname, enquete]);
 
     // Função para atualizar os votos com base na categoria
     const handleVote = () => {
+        // Marca o botão como clicado e armazena essa informação no localStorage, associando à rota atual
+        setBotaoClicado(true);
+        localStorage.setItem(`botaoClicado_${pathname}`, 'true');
+
         // Procura pelo item de votos correspondente no array
         const votoAtual = enquete.find(voto => voto.id === props.id);
 
@@ -54,24 +66,35 @@ export default function Votos(props: VotosProps) {
         }
     };
 
+    // Verifica se o botão deve ser desativado com base na rota atual e no estado do botão
+    const shouldDisableButton = botaoClicado;
+
     return (
-        <button onClick={handleVote} className="flex w-full justify-between p-3 border-zinc-300 border rounded-md">
-            <div className="text-start">
-                <h3 className="text-xl">{props.categoria}</h3>
-                <span className="text-sm">
-                    {props.quantidadeVotos} votos, {props.porcentagemVotos}%
-                </span>
-            </div>
-            <div>
-                <Image
-                    className="rounded-full"
-                    src={props.imagem}
-                    alt={"Avaliacao"}
-                    width={50}
-                    height={50}
-                    priority
-                />
-            </div>
+        <button 
+            onClick={handleVote} 
+            className="flex w-full justify-between p-3 border-zinc-300 border rounded-md" 
+            disabled={shouldDisableButton}
+        >
+            {shouldDisableButton ? 'Botão já clicado' : (
+                <>
+                    <div className="text-start">
+                        <h3 className="text-xl">{props.categoria}</h3>
+                        <span className="text-sm">
+                            {props.quantidadeVotos} votos, {props.porcentagemVotos}%
+                        </span>
+                    </div>
+                    <div>
+                        <Image
+                            className="rounded-full"
+                            src={props.imagem}
+                            alt={"Avaliacao"}
+                            width={50}
+                            height={50}
+                            priority
+                        />
+                    </div>
+                </>
+            )}
         </button>
     );
 }
