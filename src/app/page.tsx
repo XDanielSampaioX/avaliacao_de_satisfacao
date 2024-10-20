@@ -22,6 +22,9 @@ export default function Home() {
       <Link href="/NovaVotacao">
         <IconCirclePlusFilled className="absolute bottom-5 right-2 w-12 h-12 text-blue-500" />
       </Link>
+      <Link href="/login">
+        login
+      </Link>
     </div>
   );
 }
