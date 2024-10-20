@@ -70,12 +70,15 @@ export default function Votos(props: VotosProps) {
     const shouldDisableButton = botaoClicado;
 
     return (
-        <button 
-            onClick={handleVote} 
-            className="flex w-full justify-between p-3 border-zinc-300 border rounded-md" 
+        <button
+            onClick={handleVote}
+            className="flex w-full justify-between p-3 border-zinc-300 border rounded-md"
             disabled={shouldDisableButton}
         >
-            {shouldDisableButton ? 'Botão já clicado' : (
+            {shouldDisableButton ?
+            <div>
+                <span>Obrigador por votar</span>
+            </div> : (
                 <>
                     <div className="text-start">
                         <h3 className="text-xl">{props.categoria}</h3>

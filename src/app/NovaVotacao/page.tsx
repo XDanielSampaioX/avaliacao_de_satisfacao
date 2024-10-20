@@ -1,14 +1,14 @@
 'use client'
 
 import VotosContext from "@/data/contexts/VotacaoContext";
-import { IconArrowLeft, IconCircleCheckFilled } from "@tabler/icons-react";
+import { IconArrowLeft, IconCircleCheckFilled, IconPhotoPlus } from "@tabler/icons-react";
 import Link from "next/link";
 import { useContext, useState } from "react";
 
 
 type TipoLocalVotacaoProps = {
     nome_enquete: string;
-    prazo_votacao: string;
+    inicio_votacao: string;
     local_enquete: string;
 }
 
@@ -17,7 +17,7 @@ export default function NovaVotacao() {
 
     const [formData, setFormData] = useState<TipoLocalVotacaoProps>({
         nome_enquete: '',
-        prazo_votacao: '',
+        inicio_votacao: '',
         local_enquete: '',
     });
 
@@ -37,7 +37,7 @@ export default function NovaVotacao() {
         // Limpar o formulário após o envio
         setFormData({
             nome_enquete: '',
-            prazo_votacao: '',
+            inicio_votacao: '',
             local_enquete: '',
         });
     };
@@ -61,7 +61,7 @@ export default function NovaVotacao() {
                     required
                 />
                 <input
-                    className="mx-2 p-1 border border-spacing-1 rounded-md"
+                    className="border border-spacing-1 rounded-md p-1 mx-2 my-1"
                     type="text"
                     name="local_enquete"
                     value={formData.local_enquete}
@@ -73,8 +73,8 @@ export default function NovaVotacao() {
                     <span>Prazo de Votação</span>
                     <input
                         type="datetime-local"
-                        name="prazo_votacao" // Corrigido para o nome correto
-                        value={formData.prazo_votacao}
+                        name="inicio_votacao" // Corrigido para o nome correto
+                        value={formData.inicio_votacao}
                         onChange={handleChange}
                         required
                     />

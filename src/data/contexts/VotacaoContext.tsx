@@ -13,7 +13,7 @@ type VotacaoContextType = {
 type TipoLocalVotacaoProps = {
     id?: number;
     nome_enquete: string;
-    prazo_votacao: string;
+    inicio_votacao: string;
     local_enquete: string;
 };
 
@@ -43,7 +43,7 @@ export const VotacaoContextProvider = ({ children }: { children: React.ReactNode
     const fetchVotos = async () => {
         const { data, error } = await supabase
             .from('satisfacao')
-            .select(`*, local_votacao (id, nome_enquete, prazo_votacao, local_enquete)`);
+            .select(`*, local_votacao (id, nome_enquete, inicio_votacao, local_enquete)`);
 
         if (error) {
             console.error("Erro ao buscar votos do Supabase:", error);

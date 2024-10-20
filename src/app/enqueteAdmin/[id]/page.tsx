@@ -1,13 +1,14 @@
 'use client';
 
 import DataValidade from "@/components/DataValidade";
-import Votos from "@/components/Votos";
+import VotosAdmin from "@/components/VotosAdmin";
 import VotacaoContext from "@/data/contexts/VotacaoContext";
 import { useParams } from "next/navigation";
 import { useContext } from "react";
 import ExportButton from "@/components/ExportButton";
 import TelaLogin from "@/components/TelaLogin";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function EnquetePage() {
     const { id } = useParams(); // Pega o ID da URL
@@ -22,7 +23,7 @@ export default function EnquetePage() {
     };
 
     return (
-        <div>
+        <TelaLogin>
             {!enqueteID ? (
                 <div role="status" className="max-w-sm animate-pulse mx-auto">
                     <div className="flex items-center justify-center h-48 bg-gray-300 rounded sm:w-96 dark:bg-gray-700 m-1">
@@ -49,26 +50,30 @@ export default function EnquetePage() {
                         <div className="text-md py-2">
                             {enqueteID.local_votacao.local_enquete}
                         </div>
+                        <ExportButton id={enqueteID.id} />
+                        <div className="py-2">
+                            <Link className="bg-blue-500 text-white font-bold my-5 py-2 px-4 rounded-md" href={`/enquete/${enqueteID.id}`}>{`Enquete/${enqueteID.id}`}</Link>
+                        </div>
                         <ul key={enqueteID.id}>
                             <li>
-                                <Votos id={enqueteID.id} quantidadeVotos={enqueteID.muito_insatisfeito ?? 0} categoria={"Muito Insatisfeito"} imagem={"/assets/muito_insatisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.muito_insatisfeito)}></Votos>
+                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.muito_insatisfeito ?? 0} categoria={"Muito Insatisfeito"} imagem={"/assets/muito_insatisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.muito_insatisfeito)}></VotosAdmin>
                             </li>
                             <li>
-                                <Votos id={enqueteID.id} quantidadeVotos={enqueteID.insatisfeito ?? 0} categoria={"Insatisfeito"} imagem={"/assets/insatisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.insatisfeito)}></Votos>
+                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.insatisfeito ?? 0} categoria={"Insatisfeito"} imagem={"/assets/insatisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.insatisfeito)}></VotosAdmin>
                             </li>
                             <li>
-                                <Votos id={enqueteID.id} quantidadeVotos={enqueteID.moderado ?? 0} categoria={"Moderado"} imagem={"/assets/moderado.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.moderado)}></Votos>
+                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.moderado ?? 0} categoria={"Moderado"} imagem={"/assets/moderado.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.moderado)}></VotosAdmin>
                             </li>
                             <li>
-                                <Votos id={enqueteID.id} quantidadeVotos={enqueteID.satisfeito ?? 0} categoria={"Satisfeito"} imagem={"/assets/satisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.satisfeito)}></Votos>
+                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.satisfeito ?? 0} categoria={"Satisfeito"} imagem={"/assets/satisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.satisfeito)}></VotosAdmin>
                             </li>
                             <li>
-                                <Votos id={enqueteID.id} quantidadeVotos={enqueteID.muito_satisfeito ?? 0} categoria={"Muito Satisfeito"} imagem={"/assets/muito_satisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.muito_satisfeito)}></Votos>
+                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.muito_satisfeito ?? 0} categoria={"Muito Satisfeito"} imagem={"/assets/muito_satisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.muito_satisfeito)}></VotosAdmin>
                             </li>
                         </ul>
                     </div>
                 </div>
             )}
-        </div>
+        </TelaLogin>
     );
 }

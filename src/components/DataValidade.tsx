@@ -14,7 +14,7 @@ export default function DataValidade(props: DataValidadeProps) {
 
     return (
         <>
-            <span className="flex justify-center items-center text-zinc-400">Avotação é possivel até {formattedDate}</span>
+            <span className="flex justify-center items-center text-zinc-400">Inicio das votações: {formattedDate}</span>
         </>
     )
 };
