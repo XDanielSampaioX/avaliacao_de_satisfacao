@@ -5,8 +5,6 @@ import Votos from "@/components/Votos";
 import VotacaoContext from "@/data/contexts/VotacaoContext";
 import { useParams } from "next/navigation";
 import { useContext } from "react";
-import ExportButton from "@/components/ExportButton";
-import TelaLogin from "@/components/TelaLogin";
 import Image from "next/image";
 
 export default function EnquetePage() {

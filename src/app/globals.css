@@ -4,7 +4,7 @@
 
 @layer components {
     .container {
-        @apply w-[375px] h-screen mx-auto
+        @apply w-[375px] mx-auto
     }
     
 }

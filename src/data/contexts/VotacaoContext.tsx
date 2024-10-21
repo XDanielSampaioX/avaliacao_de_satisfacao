@@ -60,6 +60,7 @@ export const VotacaoContextProvider = ({ children }: { children: React.ReactNode
     // Função para postar votos na tabela 'local_votacao'
     const postVotos = async (props: TipoLocalVotacaoProps) => {
         const { data, error } = await supabase.from('local_votacao').insert([{ ...props }]).select();
+        await supabase.from('satisfacao').insert([{}]).select();
 
         if (error) {
             console.log("Erro ao inserir voto:", error);

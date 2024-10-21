@@ -13,17 +13,17 @@ export default function Home() {
 
   return (
     <Login>
-      <div className="relative container bg-zinc-200">
+      <div className="container bg-zinc-200 rounded-md">
           <div className="text-xl shadow-sm border-b border-gray-400">
             <h2 className="m-3 pl-5">Suas enquetes</h2>
           </div>
-          <div className="">
+          <div>
             {enquete.map((item) => (
-              <Enquetes key={item.id} id={item.id} nomeEnquete={item.local_votacao.nome_enquete} totalVotos={item.totalVotos} />
+              <Enquetes key={item.id} id={item.id} nomeEnquete={item.local_votacao.nome_enquete} local_enquete={item.local_votacao.local_enquete} totalVotos={item.totalVotos} />
             ))}
           </div>
           <Link href="/NovaVotacao">
-            <IconCirclePlusFilled className="absolute bottom-5 right-2 w-12 h-12 text-blue-500" />
+            <IconCirclePlusFilled className="ml-auto mt-2 w-12 h-12 text-blue-500" />
           </Link>
         </div>
     </Login>
