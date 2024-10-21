@@ -1,7 +1,7 @@
 'use client'
 
 import VotosContext from "@/data/contexts/VotacaoContext";
-import { IconArrowLeft, IconCircleCheckFilled, IconPhotoPlus } from "@tabler/icons-react";
+import { IconArrowLeft, IconCircleCheckFilled } from "@tabler/icons-react";
 import Link from "next/link";
 import { useContext, useState } from "react";
 
