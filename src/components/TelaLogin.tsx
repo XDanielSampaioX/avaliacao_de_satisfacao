@@ -45,7 +45,7 @@ export default function Login({ children }: TelaLoginProps) {
                     {children}
                 </>
             ) : (
-                <div className="container bg-zinc-200 flex flex-col items-center justify-center px-2">
+                <div className="container h-screen bg-zinc-200 flex flex-col items-center justify-center px-2">
                     <div className="bg-white rounded-md w-full gap-2 p-4 flex flex-col items-center">
                         <h3 className="text-3xl text-black font-semibold">Login</h3>
                         <form className='flex flex-col gap-3 w-full'>

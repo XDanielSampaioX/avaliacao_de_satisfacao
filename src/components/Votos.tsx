@@ -5,10 +5,8 @@ import { usePathname } from "next/navigation";
 
 interface VotosProps {
     id: number;
-    quantidadeVotos: number;
     categoria: string;
     imagem: string;
-    porcentagemVotos: number;
 }
 
 export default function Votos(props: VotosProps) {
@@ -72,7 +70,7 @@ export default function Votos(props: VotosProps) {
     return (
         <button
             onClick={handleVote}
-            className="flex w-full justify-between p-3 border-zinc-300 border rounded-md"
+            className="flex w-full items-center justify-between p-3 border-zinc-300 border rounded-md"
             disabled={shouldDisableButton}
         >
             {shouldDisableButton ?
@@ -82,9 +80,6 @@ export default function Votos(props: VotosProps) {
                 <>
                     <div className="text-start">
                         <h3 className="text-xl">{props.categoria}</h3>
-                        <span className="text-sm">
-                            {props.quantidadeVotos} votos, {props.porcentagemVotos}%
-                        </span>
                     </div>
                     <div>
                         <Image
