@@ -64,7 +64,7 @@ export default function EnquetePage() {
                                     </li>
                                 </ul>
                             ) :
-                                <div className="w-52 h-52 relative">
+                                <div className="w-72 h-72 relative">
                                     <Image className="object-cover" src={"/assets/moema2.png"} alt={"moema"} fill priority={true}></Image>
                                 </div>
                             }
