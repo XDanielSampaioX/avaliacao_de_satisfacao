@@ -27,7 +27,7 @@ export default function EnquetePage() {
     async function QRCodeGenerator(props : number) {
         console.log(props);
         
-        const link = `https://avaliacao-de-satisfacao-dp9hl85tv.vercel.app//enquete/${props}`
+        const link = `https://avaliacao-de-satisfacao-q31ojlr0s.vercel.app/enquete/${props}`
         try {
             const url = await QRCode.toDataURL(link);
             setQrCodeUrl(url);
