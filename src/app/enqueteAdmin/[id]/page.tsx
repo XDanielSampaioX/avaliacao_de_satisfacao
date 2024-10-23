@@ -10,10 +10,6 @@ import TelaLogin from "@/components/TelaLogin";
 import Image from "next/image";
 import QRCode from 'qrcode'
 
-interface linkProps{
-    linkEnquete: string
-}
-
 export default function EnquetePage() {
     const { id } = useParams(); // Pega o ID da URL
     const { enquete } = useContext(VotacaoContext);
@@ -28,8 +24,8 @@ export default function EnquetePage() {
         return enqueteID && enqueteID.totalVotos > 0 ? +((quantidadeVotosSatisfacao / enqueteID.totalVotos) * 100).toFixed(2) : 0;
     };
 
-    async function QRCodeGenerator({linkEnquete} : linkProps) {
-        const link = `https://avaliacao-de-satisfacao-lovat.vercel.app/enquete/${linkEnquete}}`
+    async function QRCodeGenerator(props : number) {
+        const link = `https://avaliacao-de-satisfacao-lovat.vercel.app/enquete/${props}}`
         try {
             const url = await QRCode.toDataURL(link);
             setQrCodeUrl(url);
@@ -70,7 +66,7 @@ export default function EnquetePage() {
                         </div>
                         <div className="flex justify-center items-center gap-x-2 pt-2">
                             <ExportButton id={enqueteID.id} />
-                            <button className="w-full bg-blue-500 text-white p-2 rounded-md" onClick={() => QRCodeGenerator(`https://avaliacao-de-satisfacao-lovat.vercel.app/enquete/${enqueteID.id}}`)}>
+                            <button className="w-full bg-blue-500 text-white p-2 rounded-md" onClick={() => QRCodeGenerator(enqueteID.id)}>
                                 Gerar QR Code
                             </button>
                         </div>
