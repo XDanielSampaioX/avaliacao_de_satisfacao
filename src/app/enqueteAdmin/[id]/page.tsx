@@ -11,7 +11,7 @@ import Image from "next/image";
 import QRCode from 'qrcode'
 
 interface linkProps{
-    link: string
+    linkEnquete: string
 }
 
 export default function EnquetePage() {
@@ -28,8 +28,8 @@ export default function EnquetePage() {
         return enqueteID && enqueteID.totalVotos > 0 ? +((quantidadeVotosSatisfacao / enqueteID.totalVotos) * 100).toFixed(2) : 0;
     };
 
-    async function QRCodeGenerator(props : linkProps) {
-        const link = `https://avaliacao-de-satisfacao-lovat.vercel.app/enquete/${props.link}}`
+    async function QRCodeGenerator({linkEnquete} : linkProps) {
+        const link = `https://avaliacao-de-satisfacao-lovat.vercel.app/enquete/${linkEnquete}}`
         try {
             const url = await QRCode.toDataURL(link);
             setQrCodeUrl(url);
