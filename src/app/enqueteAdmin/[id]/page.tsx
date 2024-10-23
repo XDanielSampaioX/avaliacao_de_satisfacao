@@ -64,7 +64,7 @@ export default function EnquetePage() {
                         <div className="text-md">
                             {enqueteID.local_votacao.local_enquete}
                         </div>
-                        <div className="flex justify-center items-center gap-x-2 pt-2">
+                        <div className="flex justify-center items-center gap-x-2 py-2">
                             <ExportButton id={enqueteID.id} />
                             <button className="w-full bg-blue-500 text-white p-2 rounded-md" onClick={() => QRCodeGenerator(enqueteID.id)}>
                                 Gerar QR Code

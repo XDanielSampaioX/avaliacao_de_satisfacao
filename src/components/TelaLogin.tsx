@@ -40,13 +40,13 @@ export default function Login({ children }: TelaLoginProps) {
     };
 
     return (
-        <div className='relative'>
+        <div className='container'>
             {user ? (
                 <>
                     {children}
                 </>
             ) : (
-                <div className="container h-screen flex flex-col items-center justify-center px-2">
+                <div className="container h-screen flex flex-col items-center justify-center px-2 relative">
                     <Image className="object-cover -z-50 rounded-md" src={"/assets/bg-transparente.png"} alt={'bg-moema'} fill priority={true}></Image>
                     <div className="bg-white rounded-md w-full gap-2 p-4 flex flex-col items-center">
                         <h3 className="text-3xl text-black font-semibold">Login</h3>
