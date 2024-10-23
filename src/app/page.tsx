@@ -22,7 +22,7 @@ export default function Home() {
               <Enquetes key={item.id} id={item.id} nomeEnquete={item.local_votacao.nome_enquete} local_enquete={item.local_votacao.local_enquete} totalVotos={item.totalVotos} />
             ))}
           </div>
-          <Link href="/NovaVotacao">
+          <Link href="/novaVotacao">
             <IconCirclePlusFilled className="ml-auto mt-2 w-12 h-12 text-blue-500" />
           </Link>
         </div>
