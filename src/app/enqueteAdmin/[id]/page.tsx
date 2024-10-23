@@ -8,8 +8,11 @@ import { useContext, useState } from "react";
 import ExportButton from "@/components/ExportButton";
 import TelaLogin from "@/components/TelaLogin";
 import Image from "next/image";
-import Link from "next/link";
 import QRCode from 'qrcode'
+
+interface linkProps{
+    link: string
+}
 
 export default function EnquetePage() {
     const { id } = useParams(); // Pega o ID da URL
@@ -25,8 +28,8 @@ export default function EnquetePage() {
         return enqueteID && enqueteID.totalVotos > 0 ? +((quantidadeVotosSatisfacao / enqueteID.totalVotos) * 100).toFixed(2) : 0;
     };
 
-    async function QRCodeGenerator(props: any) {
-        const link = `https://avaliacao-de-satisfacao-lovat.vercel.app/enquete/${props}}`
+    async function QRCodeGenerator(props : linkProps) {
+        const link = `https://avaliacao-de-satisfacao-lovat.vercel.app/enquete/${props.link}}`
         try {
             const url = await QRCode.toDataURL(link);
             setQrCodeUrl(url);
