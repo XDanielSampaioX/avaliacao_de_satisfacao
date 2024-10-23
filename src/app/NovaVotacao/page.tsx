@@ -43,7 +43,7 @@ export default function NovaVotacao() {
     };
 
     return (
-        <div className="container relative">
+        <div className="container relative h-screen">
             <div className="flex w-[375px] p-3 gap-3 border-b-2 border-gray-200">
                 <Link href="/">
                     <IconArrowLeft />
@@ -70,10 +70,10 @@ export default function NovaVotacao() {
                     required
                 />
                 <div className="flex justify-between p-2">
-                    <span>Prazo de Votação</span>
+                    <span>Data inicio da Votação</span>
                     <input
                         type="datetime-local"
-                        name="inicio_votacao" // Corrigido para o nome correto
+                        name="inicio_votacao"
                         value={formData.inicio_votacao}
                         onChange={handleChange}
                         required

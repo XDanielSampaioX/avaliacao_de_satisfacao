@@ -13,9 +13,9 @@ export default function Home() {
 
   return (
     <Login>
-      <div className="container bg-zinc-200 rounded-md">
+      <div className="container bg-zinc-200 rounded-md w-full">
           <div className="text-xl shadow-sm border-b border-gray-400">
-            <h2 className="m-3 pl-5">Suas enquetes</h2>
+            <h2 className="p-2 pl-5">Suas enquetes</h2>
           </div>
           <div>
             {enquete.map((item) => (

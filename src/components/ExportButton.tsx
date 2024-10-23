@@ -7,8 +7,8 @@ const ExportButton = ({id}: {id: number}) => {
     };
 
     return (
-        <div className="pb-3">
-            <button className="flex justify-center items-center gap-2 bg-zinc-300 rounded-full hover:bg-zinc-400 px-3 py-1 mr-auto" onClick={handleExport}>
+        <div className="w-full">
+            <button className="w-full flex justify-center items-center gap-2 bg-zinc-300 rounded-md hover:bg-zinc-400 px-3 py-2" onClick={handleExport}>
                 <IconDownload/>
                 <span>Exportar</span>
             </button>

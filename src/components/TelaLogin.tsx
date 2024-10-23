@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import supabase from '@/config/supabaseClient';
 import { User as SupabaseUser } from '@supabase/auth-js'; // Importe o tipo User do Supabase
+import Image from 'next/image';
 
 interface TelaLoginProps {
     children: React.ReactNode;
@@ -39,13 +40,14 @@ export default function Login({ children }: TelaLoginProps) {
     };
 
     return (
-        <div>
+        <div className='relative'>
             {user ? (
                 <>
                     {children}
                 </>
             ) : (
-                <div className="container h-screen bg-zinc-200 flex flex-col items-center justify-center px-2">
+                <div className="container h-screen flex flex-col items-center justify-center px-2">
+                    <Image className="object-cover -z-50 rounded-md" src={"/assets/bg-transparente.png"} alt={'bg-moema'} fill priority={true}></Image>
                     <div className="bg-white rounded-md w-full gap-2 p-4 flex flex-col items-center">
                         <h3 className="text-3xl text-black font-semibold">Login</h3>
                         <form className='flex flex-col gap-3 w-full'>
