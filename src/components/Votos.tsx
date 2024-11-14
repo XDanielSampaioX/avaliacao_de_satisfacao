@@ -1,7 +1,7 @@
-import VotosContext from "@/data/contexts/VotacaoContext";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
+import VotosContext from "../contexts/VotacaoContext";
 
 interface VotosProps {
     id: number;

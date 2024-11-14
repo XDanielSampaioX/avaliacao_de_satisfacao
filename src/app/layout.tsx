@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
+import { VotacaoContextProvider } from "../contexts/VotacaoContext";
 import "./globals.css";
-import { VotacaoContextProvider } from "@/data/contexts/VotacaoContext";
 
 export const metadata: Metadata = {
   title: "Enquete de satisfação",

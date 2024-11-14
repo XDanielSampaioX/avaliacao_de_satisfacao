@@ -1,10 +1,10 @@
 'use client'
 
 import TelaLogin from "@/components/TelaLogin";
-import VotosContext from "@/data/contexts/VotacaoContext";
 import { IconArrowLeft, IconCircleCheckFilled } from "@tabler/icons-react";
 import Link from "next/link";
 import { useContext, useState } from "react";
+import VotosContext from "../../contexts/VotacaoContext";
 
 
 type TipoLocalVotacaoProps = {

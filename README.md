@@ -1,36 +1,27 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Projeto de Avaliação de Satisfação
 
-## Getting Started
+## Descrição do Projeto
+Este projeto foi desenvolvido com o intuito de ajudar instituições a entenderem como os usuários avaliam os ambientes que frequentam. Utilizamos a Universidade de Fortaleza (Unifor) como exemplo.
 
-First, run the development server:
+## Tecnologias Utilizadas
+- **Next.js**: Framework React para desenvolvimento front-end.
+- **Supabase**: Utilizado para autenticação e armazenamento de informações.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Funcionalidades
+- **Tela de Votação**: Disponível para todos os usuários, onde podem avaliar os ambientes.
+- **Tela de Administração**: Acesso restrito a administradores, necessitando de autenticação via email e senha pelo Supabase. Somente usuários autenticados podem acessar esta tela.
+- **Geração de Enquete via QR Code**: Os administradores podem gerar enquetes e disponibilizá-las através de QR Codes, facilitando o acesso dos usuários às votações.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Objetivo
+🎯 O objetivo principal é fornecer uma ferramenta para que instituições possam coletar feedback dos usuários sobre os ambientes que frequentam, ajudando na melhoria contínua.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Como Executar o Projeto
+1. Clone o repositório.
+2. Instale as dependências com `npm install`.
+3. Configure as variáveis de ambiente para o Supabase.
+4. Execute o projeto com `npm run dev`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Contribuição
+Contribuições são bem-vindas! Sinta-se à vontade para abrir issues e pull requests.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+🚀 **Vamos juntos melhorar os ambientes que frequentamos!**

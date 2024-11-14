@@ -1,12 +1,11 @@
 'use client'
 
-import VotacaoContext from "@/data/contexts/VotacaoContext";
-import { useContext } from "react";
-import Enquetes from "../components/Enquetes";
+import Login from "@/components/TelaLogin";
 import { IconCirclePlusFilled } from "@tabler/icons-react";
 import Link from "next/link";
-import React from 'react';
-import Login from "@/components/TelaLogin";
+import { useContext } from "react";
+import Enquetes from "../components/Enquetes";
+import VotacaoContext from "../contexts/VotacaoContext";
 
 export default function Home() {
   const { enquete } = useContext(VotacaoContext);

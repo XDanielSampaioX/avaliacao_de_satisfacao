@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import supabase from '@/config/supabaseClient';
 import { User as SupabaseUser } from '@supabase/auth-js'; // Importe o tipo User do Supabase
 import Image from 'next/image';
-import { IconLogout } from '@tabler/icons-react';
 
 interface TelaLoginProps {
     children: React.ReactNode;
@@ -36,20 +35,14 @@ export default function Login({ children }: TelaLoginProps) {
         } else {
             setUser(data.user);
             window.localStorage.setItem('tokenAcessAdmin', data.session?.access_token || '');
+            setError('');
         }
     };
-
-    const handleLogout = () => {
-        localStorage.removeItem('tokenAcessAdmin')
-        localStorage.removeItem('sb-hrbmupyrafmcpyflmujk-auth-token')
-        location.reload()
-    }
 
     return (
         <div className='container'>
             {user ? (
                 <>
-                    <button onClick={handleLogout}><IconLogout/></button>
                     {children}
                 </>
             ) : (

@@ -1,14 +1,15 @@
 'use client';
 
 import DataValidade from "@/components/DataValidade";
-import VotosAdmin from "@/components/VotosAdmin";
-import VotacaoContext from "@/data/contexts/VotacaoContext";
-import { useParams } from "next/navigation";
-import { useContext, useState } from "react";
 import ExportButton from "@/components/ExportButton";
 import TelaLogin from "@/components/TelaLogin";
+import VotosAdmin from "@/components/VotosAdmin";
 import Image from "next/image";
-import QRCode from 'qrcode'
+import { useParams } from "next/navigation";
+import QRCode from 'qrcode';
+import { useContext, useState } from "react";
+import VotacaoContext from "../../../contexts/VotacaoContext";
+import Link from "next/link";
 
 export default function EnquetePage() {
     const { id } = useParams(); // Pega o ID da URL
@@ -25,8 +26,6 @@ export default function EnquetePage() {
     };
 
     async function QRCodeGenerator(props : number) {
-        console.log(props);
-        
         const link = `https://avaliacao-de-satisfacao-lovat.vercel.app/enquete/${props}`
         try {
             const url = await QRCode.toDataURL(link);
@@ -73,31 +72,32 @@ export default function EnquetePage() {
                             </button>
                         </div>
                         {qrCodeUrl && (
-                            <div className="flex justify-center w-full m-auto py-2">
+                            <div className="flex flex-col items-center justify-center w-full m-auto py-2">
+                                <Link className="bg-blue-700 text-zinc-300 rounded-md px-3 py-2 m-2" href={`https://avaliacao-de-satisfacao-lovat.vercel.app/enquete/${enqueteID.id}`}>Link QR Code</Link>
                                 <a
                                     href={qrCodeUrl}
                                     download="qrcode.png"
                                     className="bg-blue-700 text-white p-2"
                                 >
-                                    <img src={qrCodeUrl} alt="QR Code" />
+                                    <Image src={qrCodeUrl} alt="QR Code" width={300} height={300} />
                                 </a>
                             </div>
                         )}
                         <ul key={enqueteID.id}>
                             <li>
-                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.muito_insatisfeito ?? 0} categoria={"Muito Insatisfeito"} imagem={"/assets/muito_insatisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.muito_insatisfeito)}></VotosAdmin>
-                            </li>
-                            <li>
-                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.insatisfeito ?? 0} categoria={"Insatisfeito"} imagem={"/assets/insatisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.insatisfeito)}></VotosAdmin>
-                            </li>
-                            <li>
-                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.moderado ?? 0} categoria={"Moderado"} imagem={"/assets/moderado.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.moderado)}></VotosAdmin>
+                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.muito_satisfeito ?? 0} categoria={"Muito Satisfeito"} imagem={"/assets/muito_satisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.muito_satisfeito)}></VotosAdmin>
                             </li>
                             <li>
                                 <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.satisfeito ?? 0} categoria={"Satisfeito"} imagem={"/assets/satisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.satisfeito)}></VotosAdmin>
                             </li>
                             <li>
-                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.muito_satisfeito ?? 0} categoria={"Muito Satisfeito"} imagem={"/assets/muito_satisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.muito_satisfeito)}></VotosAdmin>
+                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.moderado ?? 0} categoria={"Moderado"} imagem={"/assets/moderado.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.moderado)}></VotosAdmin>
+                            </li>
+                            <li>
+                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.insatisfeito ?? 0} categoria={"Insatisfeito"} imagem={"/assets/insatisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.insatisfeito)}></VotosAdmin>
+                            </li>
+                            <li>
+                                <VotosAdmin id={enqueteID.id} quantidadeVotos={enqueteID.muito_insatisfeito ?? 0} categoria={"Muito Insatisfeito"} imagem={"/assets/muito_insatisfeito.jpeg"} porcentagemVotos={calcularPorcentagem(enqueteID.muito_insatisfeito)}></VotosAdmin>
                             </li>
                         </ul>
                     </div>

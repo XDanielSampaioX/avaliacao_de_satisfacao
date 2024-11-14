@@ -2,10 +2,10 @@
 
 import DataValidade from "@/components/DataValidade";
 import Votos from "@/components/Votos";
-import VotacaoContext from "@/data/contexts/VotacaoContext";
+import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useContext } from "react";
-import Image from "next/image";
+import VotacaoContext from "../../../contexts/VotacaoContext";
 
 export default function EnquetePage() {
     const { id } = useParams(); // Pega o ID da URL
@@ -48,19 +48,19 @@ export default function EnquetePage() {
                             {!window.localStorage.getItem(`botaoClicado_/enquete/${id}`) ? (
                                 <ul className="w-full" key={enqueteID.id}>
                                     <li>
-                                        <Votos id={enqueteID.id} categoria={"Muito Insatisfeito"} imagem={"/assets/muito_insatisfeito.jpeg"}></Votos>
-                                    </li>
-                                    <li>
-                                        <Votos id={enqueteID.id} categoria={"Insatisfeito"} imagem={"/assets/insatisfeito.jpeg"}></Votos>
-                                    </li>
-                                    <li>
-                                        <Votos id={enqueteID.id} categoria={"Moderado"} imagem={"/assets/moderado.jpeg"}></Votos>
+                                        <Votos id={enqueteID.id} categoria={"Muito Satisfeito"} imagem={"/assets/muito_satisfeito.jpeg"}></Votos>
                                     </li>
                                     <li>
                                         <Votos id={enqueteID.id} categoria={"Satisfeito"} imagem={"/assets/satisfeito.jpeg"}></Votos>
                                     </li>
                                     <li>
-                                        <Votos id={enqueteID.id} categoria={"Muito Satisfeito"} imagem={"/assets/muito_satisfeito.jpeg"}></Votos>
+                                        <Votos id={enqueteID.id} categoria={"Moderado"} imagem={"/assets/moderado.jpeg"}></Votos>
+                                    </li>
+                                    <li>
+                                        <Votos id={enqueteID.id} categoria={"Insatisfeito"} imagem={"/assets/insatisfeito.jpeg"}></Votos>
+                                    </li>
+                                    <li>
+                                        <Votos id={enqueteID.id} categoria={"Muito Insatisfeito"} imagem={"/assets/muito_insatisfeito.jpeg"}></Votos>
                                     </li>
                                 </ul>
                             ) :
